@@ -10,6 +10,7 @@ import { FoodsContainer } from './styles';
 interface FoodData {
   id: number;
   image: string;
+  available: boolean;
   name: string;
   price: string;
   description: string;
@@ -27,8 +28,7 @@ export function Dashboard() {
     });
   }, []); 
 
-  const handleAddFood = async (food: FoodData) => {
-
+  async function handleAddFood(food: FoodData | undefined) {
     try {
       const response = await api.post('/foods', {
         ...food,
@@ -41,8 +41,7 @@ export function Dashboard() {
     }
   }
 
-  const handleUpdateFood = async (food: FoodData) => {
-
+  async function handleUpdateFood(food: FoodData) {
     try {
       const foodUpdated = await api.put(
         `/foods/${editingFood?.id}`,
@@ -60,7 +59,6 @@ export function Dashboard() {
   }
 
   const handleDeleteFood = async (id: number) => {
-
     await api.delete(`/foods/${id}`);
 
     const foodsFiltered = foods.filter(food => food.id !== id);
@@ -87,13 +85,13 @@ export function Dashboard() {
         <ModalAddFood
           isOpen={modalOpen}
           setIsOpen={() => toggleModal()}
-          handleAddFood={() => handleAddFood}
+          handleAddFood={handleAddFood}
         />
         <ModalEditFood
           isOpen={editModalOpen}
           setIsOpen={() => toggleEditModal()}
           editingFood={editingFood}
-          handleUpdateFood={() => handleUpdateFood}
+          handleUpdateFood={handleUpdateFood}
         />
 
         <FoodsContainer data-testid="foods-list">
@@ -102,8 +100,8 @@ export function Dashboard() {
               <Food
                 key={food.id}
                 food={food}
-                handleDelete={() => handleDeleteFood}
-                handleEditFood={() => handleEditFood}
+                handleDelete={() => handleDeleteFood(food.id)}
+                handleEditFood={() => handleEditFood(food)}
               />
             ))}
         </FoodsContainer>

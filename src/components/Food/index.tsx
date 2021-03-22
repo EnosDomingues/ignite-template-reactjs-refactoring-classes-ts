@@ -6,6 +6,7 @@ import api from '../../services/api';
 
 interface FoodData {
   id: number;
+  available: boolean;
   image: string;
   name: string;
   price: string;
@@ -20,7 +21,7 @@ interface FoodProps {
 
 export function Food({ food, handleDelete, handleEditFood }: FoodProps) {
 
-  const [isAvailable, setIsAvailable] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(food.available);
 
   const toggleAvailable = async () => {
 
